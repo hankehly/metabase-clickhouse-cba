@@ -1,5 +1,6 @@
 services:
-  # https://hub.docker.com/_/postgres
+  # Dockerhub
+  #   https://hub.docker.com/_/postgres
   postgres:
     image: postgres:alpine
     environment:
@@ -14,8 +15,8 @@ services:
       timeout: 5s
       retries: 3
 
-  # https://hub.docker.com/r/metabase/metabase
-  # https://github.com/enqueue/metabase-clickhouse-driver/releases/download/0.7.5/clickhouse.metabase-driver.jar
+  # Dockerhub
+  #   https://hub.docker.com/r/metabase/metabase
   metabase:
     image: metabase/metabase
     environment:
@@ -26,11 +27,20 @@ services:
       MB_DB_PASS: metabase
       MB_DB_HOST: postgres
     ports:
-    - 3000:3000
+      - 3000:3000
+    volumes:
+      - ./plugins:/plugins
 
-  # https://hub.docker.com/r/yandex/clickhouse-server/
+  # Dockerhub:
+  #   https://hub.docker.com/r/yandex/clickhouse-server/
+  # Notes:
+  #   Container exposes 8123 port for HTTP interface and 9000 port for native client.
   clickhouse:
     image: yandex/clickhouse-server
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
 
 volumes:
   postgres-data:
