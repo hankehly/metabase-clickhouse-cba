@@ -23,7 +23,7 @@ docker compose up -d
 docker compose ps  # wait until containers are healthy
 ```
 
-#### 3. Loading data into clickhouse
+#### 3. Load sample data into clickhouse
 
 ```shell
 # Commandline options for clickhouse-client

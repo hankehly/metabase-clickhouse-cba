@@ -26,6 +26,11 @@ services:
       MB_DB_USER: metabase
       MB_DB_PASS: metabase
       MB_DB_HOST: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
     ports:
       - 3000:3000
     volumes:
@@ -34,6 +39,7 @@ services:
       test: [ "CMD-SHELL", "wget --spider -nv -t1 http://0.0.0.0:3000/api/health || exit 1" ]
       interval: 10s
       timeout: 5s
+      start_period: 30s
       retries: 3
 
   # Dockerhub:
@@ -54,6 +60,8 @@ services:
       retries: 3
     volumes:
       - ./clickhouse_user_files:/var/lib/clickhouse/user_files
+      - clickhouse-data:/var/lib/clickhouse
 
 volumes:
   postgres-data:
+  clickhouse-data:
