@@ -29,7 +29,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./plugins:/plugins
+      - ./metabase_plugins:/plugins
     healthcheck:
       test: [ "CMD-SHELL", "wget --spider -nv -t1 http://0.0.0.0:3000/api/health || exit 1" ]
       interval: 10s
@@ -40,6 +40,7 @@ services:
   #   https://hub.docker.com/r/yandex/clickhouse-server/
   # Notes:
   #   Container exposes 8123 port for HTTP interface and 9000 port for native client.
+  #   The username is 'default' by default.
   clickhouse:
     image: yandex/clickhouse-server
     ulimits:
@@ -51,6 +52,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - ./clickhouse_user_files:/var/lib/clickhouse/user_files
 
 volumes:
   postgres-data:
