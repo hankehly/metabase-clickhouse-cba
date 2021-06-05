@@ -30,6 +30,11 @@ services:
       - 3000:3000
     volumes:
       - ./plugins:/plugins
+    healthcheck:
+      test: [ "CMD-SHELL", "curl http://0.0.0.0:3000/api/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   # Dockerhub:
   #   https://hub.docker.com/r/yandex/clickhouse-server/
@@ -43,6 +48,9 @@ services:
         hard: 262144
     healthcheck:
       test: [ "CMD-SHELL", "curl http://0.0.0.0:8123/ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   postgres-data:
