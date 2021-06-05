@@ -1,0 +1,2 @@
+get_clickhouse_metabase_driver:
+	@python scripts/get_clickhouse_metabase_driver.py

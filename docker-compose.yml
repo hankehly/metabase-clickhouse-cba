@@ -1,0 +1,36 @@
+services:
+  # https://hub.docker.com/_/postgres
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: metabase
+      POSTGRES_USER: metabase
+      POSTGRES_DB: metabase
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U metabase -d metabase" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # https://hub.docker.com/r/metabase/metabase
+  # https://github.com/enqueue/metabase-clickhouse-driver/releases/download/0.7.5/clickhouse.metabase-driver.jar
+  metabase:
+    image: metabase/metabase
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: metabase
+      MB_DB_PASS: metabase
+      MB_DB_HOST: postgres
+    ports:
+    - 3000:3000
+
+  # https://hub.docker.com/r/yandex/clickhouse-server/
+  clickhouse:
+    image: yandex/clickhouse-server
+
+volumes:
+  postgres-data:
