@@ -1,5 +1,5 @@
 get_clickhouse_metabase_driver:
-	@python scripts/get_clickhouse_metabase_driver.py
+	@python3 scripts/get_clickhouse_metabase_driver.py
 
 get_sample_dataset:
-	@python scripts/get_sample_dataset.py
+	@python3 scripts/get_sample_dataset.py
