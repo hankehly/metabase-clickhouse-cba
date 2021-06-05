@@ -2,7 +2,7 @@
 
 A sample repository to explore deployment options for container based metabase/clickhouse application.
 
-- [ ] Docker Compose (Local)
+- [x] Docker Compose (Local)
 - [ ] Elastic Container Service (AWS)
 - [ ] Elastic Kubernetes Service (AWS)
 - [ ] Google Kubernetes Engine (GCP)
@@ -35,6 +35,6 @@ $ docker run -it --rm --network 'container:metabase-clickhouse-cba_clickhouse_1'
 147264
 ```
 
-#### Configure metabase
+#### 4. Configure metabase
 
 Open http://localhost:3000 in your host browser and follow the instructions. Specify 'default' for the clickhouse database user, and leave the password blank.
