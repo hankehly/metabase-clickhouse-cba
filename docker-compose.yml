@@ -29,8 +29,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      clickhouse:
-        condition: service_healthy
     ports:
       - 3000:3000
     volumes:
@@ -62,6 +60,43 @@ services:
       - ./clickhouse_user_files:/var/lib/clickhouse/user_files
       - clickhouse-data:/var/lib/clickhouse
 
+  # Dockerhub:
+  #   https://hub.docker.com/r/grafana/grafana
+  # Docker installation guides:
+  #   https://grafana.com/docs/grafana/latest/installation/docker/
+  #   https://grafana.com/docs/grafana/latest/administration/configure-docker/
+  # Notes
+  #   - username, password are both 'admin' on setup
+  #   - you can reset the admin password
+  #     $ docker exec -it {container} grafana-cli admin reset-admin-password {password}
+  # Creating Beautiful Grafana Dashboards on ClickHouse: a Tutorial
+  #   https://altinity.com/blog/2019/12/28/creating-beautiful-grafana-dashboards-on-clickhouse-a-tutorial
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3001:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      GF_INSTALL_PLUGINS: vertamedia-clickhouse-datasource
+
+  # Dockerhub:
+  #   https://hub.docker.com/_/telegraf
+  # https://docs.influxdata.com/telegraf/v1.18/introduction/getting-started/
+  # docker run --net=container:influxdb telegraf
+#  telegraf:
+#    image: telegraf
+#    depends_on:
+#      clickhouse:
+#        condition: service_healthy
+#    volumes:
+#      - ./telegraf.conf:/etc/telegraf/telegraf.conf
+
+  # https://hub.docker.com/r/prom/prometheus
+#  prometheus:
+#    image: prom/prometheus
+
 volumes:
   postgres-data:
   clickhouse-data:
+  grafana-data:
