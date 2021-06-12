@@ -18,7 +18,14 @@ services:
   # Dockerhub
   #   https://hub.docker.com/r/metabase/metabase
   metabase:
-    image: metabase/metabase
+    # Option 1 - Bake clickhouse plugin into metabase image
+    build:
+      context: .
+      dockerfile: docker/metabase.Dockerfile
+    # Option 2 - Download plugin and mount
+    # image: metabase/metabase
+    # volumes:
+    #   - ./metabase_plugins:/plugins
     environment:
       MB_DB_TYPE: postgres
       MB_DB_DBNAME: metabase
@@ -31,8 +38,6 @@ services:
         condition: service_healthy
     ports:
       - 3000:3000
-    volumes:
-      - ./metabase_plugins:/plugins
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-cache --spider -nv -t1 http://0.0.0.0:3000/api/health || exit 1" ]
       interval: 10s
@@ -69,21 +74,23 @@ services:
   #   - username, password are both 'admin' on setup
   #   - you can reset the admin password
   #     $ docker exec -it {container} grafana-cli admin reset-admin-password {password}
-  # Creating Beautiful Grafana Dashboards on ClickHouse: a Tutorial
-  #   https://altinity.com/blog/2019/12/28/creating-beautiful-grafana-dashboards-on-clickhouse-a-tutorial
-  #  grafana:
-  #    image: grafana/grafana
-  #    ports:
-  #      - 3001:3000
-  #    volumes:
-  #      - grafana-data:/var/lib/grafana
-  #    environment:
-  #      GF_INSTALL_PLUGINS: vertamedia-clickhouse-datasource
-  #    healthcheck:
-  #      test: [ "CMD-SHELL", "wget --no-cache --spider -nv -t1 http://0.0.0.0:3000/api/health || exit 1" ]
-  #      interval: 10s
-  #      timeout: 5s
-  #      retries: 3
+  #   - Checkout prebuild dashboards for clickhouse (and others)
+  #      https://grafana.com/grafana/dashboards?direction=desc&orderBy=reviewsAvgRating&search=clickhouse
+  #   - Tutorial: Creating Beautiful Grafana Dashboards on ClickHouse
+  #      https://altinity.com/blog/2019/12/28/creating-beautiful-grafana-dashboards-on-clickhouse-a-tutorial
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3001:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      GF_INSTALL_PLUGINS: vertamedia-clickhouse-datasource
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-cache --spider -nv -t1 http://0.0.0.0:3000/api/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   # Dockerhub:
   #   https://hub.docker.com/r/prom/prometheus
